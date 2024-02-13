@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import java.io.File;
 import java.util.Calendar;
+import android.os.Handler;
+import android.os.Looper;
+import android.widget.Toast;
 
 public class OsmMapTileCacher {
 
@@ -17,6 +20,13 @@ public class OsmMapTileCacher {
     private SQLiteDatabase getDatabase() {
         String dbPath = context.getFilesDir().getPath() + "/osmdroid/tiles/cache.db";
         File dbFile = new File(dbPath);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, "DB Path: " + dbPath, Toast.LENGTH_LONG).show();
+            }
+        });
 
         if (!dbFile.getParentFile().exists()) {
             dbFile.getParentFile().mkdirs();
