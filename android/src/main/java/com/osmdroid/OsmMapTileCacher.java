@@ -1,3 +1,5 @@
+package com.osmdroid;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import java.io.File;
