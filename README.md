@@ -20,7 +20,7 @@ The `TileCacher` utilizes the `cacheTilesFromDirectory` method to specify the lo
 ```js
 import { TileCacher } from '@milad445/react-native-osmdroid';
 
-TileCacher.cacheTilesFromDirectory('/storage/emulated/0/Download/map/tiles');
+TileCacher.cacheTilesFromDirectory('/storage/emulated/0/map/tiles', { showProgressToast: true });
 ```
 
 ### Directory Structure
@@ -82,17 +82,18 @@ This feature is specific to Android. Ensure your app has the necessary permissio
 ```js
 import React from 'react';
 import { Button, View } from 'react-native';
-import MapView, { TileCacher } from '@milad445/react-native-osmdroid';
+import MapView, { UrlTile, TileCacher } from '@milad445/react-native-osmdroid';
 
 export default function App() {
   const cacheTiles = () => {
-    TileCacher.cacheTilesFromDirectory('/storage/emulated/0/Download/map/tiles');
+    TileCacher.cacheTilesFromDirectory('/storage/emulated/0/map/tiles', { showProgressToast: true });
   };
 
   return (
     <View style={{ flex: 1 }}>
       <Button title="Cache Tiles" onPress={cacheTiles} />
       <MapView style={{ flex: 1 }}>
+        <UrlTile urlTemplate="" />
       </MapView>
     </View>
   );

@@ -21,28 +21,28 @@ import { NativeModules } from 'react-native';
 const { TileCacher } = NativeModules;
 
 /**
- * Specifies the path to the local directory where map tiles will be cached for offline use, available only on Android.
- * This feature enables the caching of downloaded map tiles on the device's local storage, allowing for
- * offline map functionality and improved performance for map tile loading on Android devices. The cached tiles reduce
- * network requests for previously visited areas and ensure maps are still accessible without an internet connection.
+ * Facilitates caching of map tiles in a specified local directory for offline use on Android devices. This utility
+ * enhances offline map functionality and map tile loading performance by storing downloaded map tiles on the device's
+ * local storage. Using cached tiles minimizes network requests for previously accessed areas, ensuring map availability
+ * without an internet connection and speeding up map rendering.
  *
- * Provide the ` TileCacher.cacheTilesFromDirectory` with a direct file system path to the desired cache directory on the device.
- * A typical path for Android might be '/storage/emulated/0/map/tiles', representing a directory
- * on the external storage where the app has write access.
+ * `TileCacher.cacheTilesFromDirectory` requires a filesystem path to the target cache directory. Optionally, a `showProgressToast`
+ * boolean can be provided to display toast messages indicating caching progress as a percentage. This feedback is useful for
+ * user experience, providing real-time updates on the caching process.
  *
- * The tiles within the cache directory must follow the subdirectory pattern "/{z}/{x}/{y}.png", where
- * `{z}` is the zoom level, `{x}` and `{y}` are the tile coordinates. This structure allows the map component
- * to efficiently locate and load the appropriate tiles for display based on the current map view on Android devices.
+ * Example cache directory path: '/storage/emulated/0/map/tiles'. The path should point to a directory on external storage
+ * where the app has write permissions. Tiles must be organized in a "/{z}/{x}/{y}.png" structure within the cache directory,
+ * where `{z}`, `{x}`, and `{y}` represent the zoom level and tile coordinates, respectively. This organization enables
+ * efficient tile retrieval and display by the map component.
  *
- * It's important to manage the cache directory's size to prevent excessive storage usage. Developers should
- * implement a strategy for cache cleanup or limiting the cache size. While the example TileDatabaseHelper
- * class demonstrates managing cached tiles in a database, any approach that monitors and controls the cache size
- * is advisable.
+ * Developers should monitor and manage the cache directory's size to avoid excessive storage consumption. Implementing
+ * a cache management strategy, such as periodic cleanup or size limitation, is recommended. The provided TileDatabaseHelper
+ * class example showcases one method of managing cached tiles, but developers may employ any suitable cache size control technique.
  *
- * Usage Example:
- * TileCacher.cacheTilesFromDirectory('/storage/emulated/0/map/tiles');
+ * Usage example with progress toast:
+ * TileCacher.cacheTilesFromDirectory('/storage/emulated/0/map/tiles', { showProgressToast: true });
  *
- * Note: This prop is specific to Android. Ensure your app has the necessary permissions to read from and write to the specified directory,
- * particularly on Android, where runtime permissions are required for accessing external storage.
+ * Note: This functionality is Android-specific. Ensure the app has the required permissions to access external storage,
+ * including runtime permissions necessary on Android.
  */
 export { TileCacher };
