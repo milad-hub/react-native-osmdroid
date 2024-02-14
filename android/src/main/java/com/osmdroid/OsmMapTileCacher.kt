@@ -89,7 +89,7 @@ class OsmMapTileCacher(private val context: Context) {
         }
 
         if (showProgress) {
-            Toast.makeText(context, "Map tiles caching completed successfully.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Operation completed successfully.", Toast.LENGTH_SHORT).show()
         }
     }
 
