@@ -41,4 +41,44 @@ public class OsmMapUrlTileManager extends ViewGroupManager<OsmMapUrlTile> {
     view.setMaximumZ(maximumZ);
   }
 
+  @ReactProp(name = "maximumNativeZ")
+  public void setMaximumNativeZ(OsmMapUrlTile view, float maximumNativeZ) {
+    view.setMaximumNativeZ(maximumNativeZ);
+  }
+
+  @ReactProp(name = "offlineMode", defaultBoolean = false)
+  public void setOfflineMode(OsmMapUrlTile view, boolean offlineMode) {
+    view.setOfflineMode(offlineMode);
+  }
+
+  @ReactProp(name = "tileCachePath")
+  public void setTileCachePath(OsmMapUrlTile view, String tileCachePath) {
+    view.setTileCachePath(tileCachePath);
+  }
+
+  @ReactProp(name = "tileCacheMaxAge")
+  public void setTileCacheMaxAge(OsmMapUrlTile view, float tileCacheMaxAge) {
+    view.setTileCacheMaxAge((long) tileCacheMaxAge);
+  }
+
+  @ReactProp(name = "tileSize", defaultInt = 256)
+  public void setTileSize(OsmMapUrlTile view, int tileSize) {
+    view.setTileSize(tileSize);
+  }
+
+  @ReactProp(name = "doubleTileSize", defaultBoolean = false)
+  public void setDoubleTileSize(OsmMapUrlTile view, boolean doubleTileSize) {
+    view.setDoubleTileSize(doubleTileSize);
+  }
+
+  @ReactProp(name = "flipY", defaultBoolean = false)
+  public void setFlipY(OsmMapUrlTile view, boolean flipY) {
+    view.setFlipY(flipY);
+  }
+
+  @ReactProp(name = "opacity", defaultFloat = 1.0f)
+  public void setOpacity(OsmMapUrlTile view, float opacity) {
+    view.setOpacity(opacity);
+  }
+
 }
