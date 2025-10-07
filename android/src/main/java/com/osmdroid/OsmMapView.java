@@ -109,7 +109,12 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
                     }
                 });
 
-        eventDispatcher = reactContext.getNativeModule(UIManagerModule.class).getEventDispatcher();
+	final UIManagerModule module = reactContext.getNativeModule(UIManagerModule.class);
+	if (module != null) {
+		eventDispatcher = module.getEventDispatcher();
+	} else {
+		eventDispatcher = null;
+	}
         this.setTileSource(TileSourceFactory.DEFAULT_TILE_SOURCE);
         this.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
     }
@@ -162,7 +167,7 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
                 BoundingBox bounds = mapView.getBoundingBox();
                 IGeoPoint center = mapView.getMapCenter();
                 lastBoundsEmitted = bounds;
-                eventDispatcher.dispatchEvent(new OsmRegionChangeEvent(getId(), bounds, center, isTouchDown));
+                if (eventDispatcher != null) { eventDispatcher.dispatchEvent(new OsmRegionChangeEvent(getId(), bounds, center, isTouchDown)); }
                 mapView.stopMonitoringRegion();
                 return true;
             }
@@ -173,7 +178,7 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
                 BoundingBox bounds = mapView.getBoundingBox();
                 IGeoPoint center = mapView.getMapCenter();
                 lastBoundsEmitted = bounds;
-                eventDispatcher.dispatchEvent(new OsmRegionChangeEvent(getId(), bounds, center, isTouchDown));
+                if (eventDispatcher != null) { eventDispatcher.dispatchEvent(new OsmRegionChangeEvent(getId(), bounds, center, isTouchDown)); }
                 mapView.stopMonitoringRegion();
                 return true;
             }
@@ -583,7 +588,7 @@ public class OsmMapView extends MapView implements MapView.OnFirstLayoutListener
                                 LatLngBoundsUtils.BoundsAreDifferent(bounds, lastBoundsEmitted))) {
                     IGeoPoint center = OsmMapView.this.getMapCenter();
                     lastBoundsEmitted = bounds;
-                    eventDispatcher.dispatchEvent(new OsmRegionChangeEvent(getId(), bounds, center, true));
+                    if (eventDispatcher != null) { eventDispatcher.dispatchEvent(new OsmRegionChangeEvent(getId(), bounds, center, true)); }
                 }
             }
 
