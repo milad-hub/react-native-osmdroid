@@ -3,6 +3,52 @@
 React Native Open Street Maps components for Android.
 This is unofficial React Native wrapper for Osmdroid SDK.
 Many thanks to [fqborges](https://github.com/fqborges) for his [library](https://github.com/fqborges/react-native-maps-osmdroid), which is the basis of this library!
+
+## 🚀 Try the Beta! (v1.1.0-beta.0)
+
+A **beta version** has been released with major improvements to offline functionality and local tile storage. While still being tested, this version offers powerful new features:
+
+### **What's New in Beta:**
+- ✅ **True Offline Mode**: Completely disable network and work with cached tiles only
+- ✅ **Local File Storage**: Read tiles directly from device filesystem using `file://` protocol  
+- ✅ **Improved Tile Caching**: Proper cache configuration with expiration control
+- ✅ **Hybrid Mode**: Automatically switch between online/offline based on network status
+- ✅ **Better Performance**: Optimized tile loading and network management
+
+### **Try it:**
+```sh
+npm install @milad445/react-native-osmdroid@beta
+```
+
+### **Quick Example:**
+```jsx
+import { MapView, UrlTile } from '@milad445/react-native-osmdroid';
+
+// Offline mode with cached tiles
+<MapView>
+  <UrlTile
+    urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    offlineMode={true}
+    tileCachePath="/storage/emulated/0/osmdroid"
+    tileCacheMaxAge={0}  // Never expire
+  />
+</MapView>
+
+// Or use local files
+<MapView>
+  <UrlTile
+    urlTemplate="file:///storage/emulated/0/maps/{z}/{x}/{y}.png"
+    offlineMode={true}
+  />
+</MapView>
+```
+
+**📖 See the [beta branch](https://github.com/milad-hub/react-native-osmdroid/tree/offline-map-tiles) for complete documentation.**
+
+> ⚠️ **Note**: Beta version is not yet production-ready. Test thoroughly before using in production.
+
+---
+
 ## Installation
 
 ```sh
