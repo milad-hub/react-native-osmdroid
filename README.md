@@ -1,4 +1,4 @@
-# react-native-osmdroid [![npm version](https://img.shields.io/npm/v/@milad445/react-native-osmdroid.svg?style=flat)](https://www.npmjs.com/package/@milad445/react-native-osmdroid) [![Downloads](https://img.shields.io/npm/dm/@milad445/react-native-osmdroid.svg)](http://www.npmtrends.com/@milad445/react-native-osmdroid)
+# react-native-osmdroid
 
 > **⚠️ BETA VERSION 1.1.1-beta.0**  
 > This is a beta release with significant improvements to offline mode and local tile functionality. While comprehensive testing has been done, this version is not yet considered stable for production use. Please test thoroughly in your development environment before deploying to production.
