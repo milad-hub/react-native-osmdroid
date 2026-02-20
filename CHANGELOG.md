@@ -5,7 +5,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0-beta.0] - 2025-10-07
+## [1.1.1-beta.0]
+
+### Fixed
+
+- Pure offline local tile behavior now explicitly uses direct local file reads in `file://` mode.
+- Improved online tile zoom clamping logic (`maximumNativeZ`) by scaling `x/y` coordinates when zoom is capped.
+- Improved URL extension parsing for tile templates with query strings or fragments.
+- Improved cache expiration handling when `tileCacheMaxAge` is unset or set to `0`.
+
+### Changed
+
+- Updated local/offline documentation to clarify pure offline usage (airplane mode, no network).
+- Updated local storage docs to emphasize base-directory `file://` usage and `/{z}/{x}/{y}.{ext}` structure.
+- Updated release metadata to `1.1.1-beta.0`.
+
+### Added
+
+- New Android unit test suite for offline/local tile behavior:
+  - `android/src/test/java/com/osmdroid/OsmMapUrlTileOfflineBehaviorTest.java`
+- Additional local tile caching import hardening for non-PNG filenames.
+
+---
+
+## [1.1.0-beta.1]
+
+### Fixed
+
+- **Local Tiles Implementation Rewrite**: Fixed critical bugs in `OsmMapUrlTile.java`
+  - Fixed hardcoded `.png` extension - now correctly extracts extension from URL template (`.jpg`, `.webp`, etc.)
+  - Fixed base directory extraction - no longer includes `{z}/{x}/{y}` placeholders in path
+  - Fixed duplicate tile source creation - single consistent tile source per mode
+  - Fixed `effectiveTileSize` not being applied to filesystem providers
+  - Added directory existence validation with warning logs
+  - **Critical**: Set osmdroid cache path to local tile directory for `MapTileFilesystemProvider` to work
+  - **Critical**: Use empty tile source name to avoid subdirectory lookup (tiles found at `{dir}/{z}/{x}/{y}.ext` directly)
+
+### Changed
+
+- Simplified `OsmMapUrlTile.java` architecture (435 → 359 lines)
+  - Clear separation: `configureLocalFileTiles()`, `configureOfflineMode()`, `configureOnlineMode()`
+  - Added `extractBaseDirectory()` and `extractFileExtension()` helper methods
+  - Removed redundant tile source creation
+  - Improved code readability and maintainability
+
+- **Simplified Local Tiles API**: No more `{z}/{x}/{y}` placeholders required
+  - Old: `file:///storage/tiles/{z}/{x}/{y}.png`
+  - New: `file:///storage/tiles` (or `file:///storage/tiles.jpg` for JPG format)
+  - The `{z}/{x}/{y}` pattern is now handled automatically
+
+---
+
+## [1.1.0-beta.0]
 
 ### ⚠️ BETA RELEASE - NOT PRODUCTION READY
 
@@ -113,7 +164,7 @@ Please report any issues on [GitHub Issues](https://github.com/milad-hub/react-n
 
 ---
 
-## [1.0.9] - Previous Stable Release
+## [1.0.9]
 
 Last stable version before beta. See git history for previous changes.
 

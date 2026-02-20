@@ -61,6 +61,14 @@ class OsmMapTileCacher(private val context: Context) {
     fun cacheTilesFromDirectory(directoryPath: String, showProgress: Boolean = false) {
         val sourceDir = File(directoryPath)
         val totalFiles = countFiles(sourceDir)
+
+        if (totalFiles == 0) {
+            if (showProgress) {
+                Toast.makeText(context, "No tiles found in directory.", Toast.LENGTH_SHORT).show()
+            }
+            return
+        }
+
         if (showProgress) {
             Toast.makeText(context, "Caching map tiles in progress", Toast.LENGTH_SHORT).show()
         }
@@ -71,10 +79,19 @@ class OsmMapTileCacher(private val context: Context) {
             if (file.isFile) {
                 val parts = file.relativeTo(File(directoryPath)).invariantSeparatorsPath.split("/")
                 if (parts.size == 3) {
-                    val z = parts[0].toInt()
-                    val x = parts[1].toInt()
-                    val y = parts[2].removeSuffix(".png").toInt()
-                    insertTile(z, x, y, "OsmMapTileSource", file)
+                    val z = parts[0].toIntOrNull() ?: return@forEach
+                    val x = parts[1].toIntOrNull() ?: return@forEach
+
+                    val fileName = parts[2]
+                    val extensionIndex = fileName.lastIndexOf('.')
+                    val yValue = if (extensionIndex > 0) {
+                        fileName.substring(0, extensionIndex)
+                    } else {
+                        fileName
+                    }
+                    val y = yValue.toIntOrNull() ?: return@forEach
+
+                    insertTile(z, x, y, DEFAULT_PROVIDER, file)
                     processedFiles++
 
                     if (showProgress) {
@@ -107,6 +124,8 @@ class OsmMapTileCacher(private val context: Context) {
     }
 
     companion object {
+        private const val DEFAULT_PROVIDER = "CustomTiles"
+
         fun getIndex(pX: Long, pY: Long, pZ: Long): Long {
             return ((pZ shl pZ.toInt()) + pX shl pZ.toInt()) + pY
         }

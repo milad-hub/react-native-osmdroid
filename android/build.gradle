@@ -1,4 +1,8 @@
 buildscript {
+  ext {
+    buildToolsVersion = "31.0.0"
+  }
+
   repositories {
     google()
     mavenCentral()

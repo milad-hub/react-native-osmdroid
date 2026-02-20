@@ -78,7 +78,13 @@ export type MapUrlTileProps = ViewProps & {
    * (URLTile) The patterns {x} {y} {z} will be replaced at runtime.
    * For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png.
    *
-   * It is also possible to refer to tiles in local filesystem with file:///top-level-directory/sub-directory/{z}/{x}/{y}.png URL-format.
+   * Local filesystem tiles can be provided with a base directory path in file:// format.
+   * Example: file:///storage/emulated/0/MyMaps/tiles (defaults to .png) or
+   * file:///storage/emulated/0/MyMaps/tiles.jpg.
+   *
+   * Legacy format with placeholders is still supported:
+   * file:///top-level-directory/sub-directory/{z}/{x}/{y}.png
+   *
    * (WMSTile) The patterns {minX} {maxX} {minY} {maxY} {width} {height} will be replaced at runtime according to EPSG:900913 specification bounding box.
    * For example, https://demo.geo-solutions.it/geoserver/tiger/wms?service=WMS&version=1.1.0&request=GetMap&layers=tiger:poi&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true&format_options=dpi:213.
    */
