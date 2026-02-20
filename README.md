@@ -4,25 +4,25 @@ React Native Open Street Maps components for Android.
 This is unofficial React Native wrapper for Osmdroid SDK.
 Many thanks to [fqborges](https://github.com/fqborges) for his [library](https://github.com/fqborges/react-native-maps-osmdroid), which is the basis of this library!
 
-## 🚀 Try the Beta! (v1.1.0-beta.0)
+## 🚀 Try the Beta! (v1.1.1-beta.0)
 
-A **beta version** has been released with major improvements to offline functionality and local tile storage. While still being tested, this version offers powerful new features:
+A **beta version** is available with major improvements to offline functionality and local tile storage. While still being tested, this version includes:
 
 ### **What's New in Beta:**
-- ✅ **True Offline Mode**: Completely disable network and work with cached tiles only
-- ✅ **Local File Storage**: Read tiles directly from device filesystem using `file://` protocol  
-- ✅ **Improved Tile Caching**: Proper cache configuration with expiration control
-- ✅ **Hybrid Mode**: Automatically switch between online/offline based on network status
-- ✅ **Better Performance**: Optimized tile loading and network management
+- ✅ **Pure Offline Local Files**: Read PNG/JPG/JPEG/WebP tiles directly from local storage with `file://` paths
+- ✅ **No Connectivity Operation**: Designed for airplane mode / no SIM / no Wi-Fi scenarios
+- ✅ **Improved Local Tile Parsing**: Better base-directory and file extension handling
+- ✅ **Improved Zoom Clamping**: Better `maximumNativeZ` coordinate handling
+- ✅ **Offline Behavior Tests**: Added Android tests focused on local/offline tile behavior
 
 ### **Try it:**
 ```sh
-npm install @milad445/react-native-osmdroid@beta
+npm install @milad445/react-native-osmdroid@1.1.1-beta.0
 ```
 
 ### **Quick Example:**
 ```jsx
-import { MapView, UrlTile } from '@milad445/react-native-osmdroid';
+import MapView, { UrlTile } from '@milad445/react-native-osmdroid';
 
 // Offline mode with cached tiles
 <MapView>
@@ -37,7 +37,8 @@ import { MapView, UrlTile } from '@milad445/react-native-osmdroid';
 // Or use local files
 <MapView>
   <UrlTile
-    urlTemplate="file:///storage/emulated/0/maps/{z}/{x}/{y}.png"
+    // Reads /{z}/{x}/{y}.png from this base directory
+    urlTemplate="file:///storage/emulated/0/maps"
     offlineMode={true}
   />
 </MapView>
