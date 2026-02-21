@@ -4,7 +4,7 @@
 
 | Prop                      | Type      | Default | Note                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | ------------------------- | --------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `urlTemplate`             | `String`  |         | The url template of the map tileserver. <br/><br/> (URLTile) The patterns {x} {y} {z} will be replaced at runtime. For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png. It is also possible to refer to tiles in local filesystem with file:///top-level-directory/sub-directory/{z}/{x}/{y}.png URL-format. <br/><br/> (WMSTile) The patterns {minX} {maxX} {minY} {maxY} {width} {height} will be replaced at runtime according to EPSG:900913 specification bounding box. For example, https://demo.geo-solutions.it/geoserver/tiger/wms?service=WMS&version=1.1.0&request=GetMap&layers=tiger:poi&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true&format_options=dpi:213. |
+| `urlTemplate`             | `String`  |         | The url template of the map tileserver. <br/><br/> (URLTile) The patterns {x} {y} {z} will be replaced at runtime. For example, http://c.tile.openstreetmap.org/{z}/{x}/{y}.png. For local tiles, preferred format is a base directory in `file://` format (for example `file:///storage/tiles` or `file:///storage/tiles.jpg`), while legacy `{z}/{x}/{y}` placeholders are still supported. <br/><br/> (WMSTile) The patterns {minX} {maxX} {minY} {maxY} {width} {height} will be replaced at runtime according to EPSG:900913 specification bounding box. For example, https://demo.geo-solutions.it/geoserver/tiger/wms?service=WMS&version=1.1.0&request=GetMap&layers=tiger:poi&styles=&bbox={minX},{minY},{maxX},{maxY}&width={width}&height={height}&srs=EPSG:900913&format=image/png&transparent=true&format_options=dpi:213. |
 | `minimumZ`                | `Number`  |         | The minimum zoom level for this tile overlay.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `maximumZ`                | `Number`  |         | The maximum zoom level for this tile overlay.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | `maximumNativeZ`          | `Number`  |         | (Optional) The maximum native zoom level for this tile overlay i.e. the highest zoom level that the tile server provides. Tiles are auto-scaled for higher zoom levels.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
@@ -32,3 +32,100 @@ NB! There is no cache size management in React Native Maps, rather developer nee
 `offlineMode` property enables mode in which only cached tiles are used, tile fetch from tileserver is not even attempted. This is useful for situations when network connectivity is poor and repeated & possibly failed attempts to fetch tiles (even with caching enabled) from tileserver would increase device power consumption. Another benefit of offline-mode is that if a requested tile is missing from the cache then lower zoom level tiles are used if available and served (after scaling). This is especially useful when user has pre-loaded an area of map for certain zoom levels, allowing user to zoom in the map to higher zoom levels than which were pre-loaded.
 
 `maximumNativeZ` property works both in caching and non-caching mode, however it is very much recommended to be used in caching mode: it sets the highest zoom level for tiles to be fetched from the tileserver. Any higher zoom levels that `maximumNativeZ` will be created by scaling a lower zoom level tile. This will help to manage the cache size, since an increase in zoom level means 4 times as many tiles are needed as in a previous level. Depending on type of map tiles and their quality a `maximumNativeZ` set at 15 - 17 and `maximumZ` set at 18 - 20 will often give good results, allowing user to zoom in deep into the map with good enough map visual quality.
+
+## Local File Tiles (file:// protocol)
+
+The `UrlTile` component supports loading tiles directly from the device's local filesystem using the `file://` protocol. This is useful for pre-packaged offline maps, aviation charts, or any scenario requiring 100% offline functionality.
+
+### Basic Usage
+
+Simply provide the base directory path - the `{z}/{x}/{y}` pattern is handled automatically:
+
+```jsx
+<UrlTile
+  urlTemplate="file:///storage/emulated/0/MyMaps/tiles"
+  minimumZ={0}
+  maximumZ={16}
+/>
+```
+
+The component will automatically look for tiles at: `{baseDir}/{z}/{x}/{y}.png`
+
+### Specifying File Format
+
+To use a different file format, append the extension to the path:
+
+```jsx
+// JPG tiles
+<UrlTile urlTemplate="file:///storage/tiles.jpg" />
+
+// WebP tiles  
+<UrlTile urlTemplate="file:///storage/tiles.webp" />
+```
+
+| Format | Path Example | Tiles Location |
+|--------|-------------|----------------|
+| PNG (default) | `file:///tiles` | `/tiles/{z}/{x}/{y}.png` |
+| JPEG | `file:///tiles.jpg` | `/tiles/{z}/{x}/{y}.jpg` |
+| WebP | `file:///tiles.webp` | `/tiles/{z}/{x}/{y}.webp` |
+
+### Directory Structure
+
+Tiles must be organized in the standard `/{z}/{x}/{y}.{ext}` structure:
+
+```
+/storage/emulated/0/MyMaps/tiles/
+├── 10/
+│   ├── 512/
+│   │   ├── 340.png
+│   │   └── 341.png
+│   └── 513/
+│       └── 340.png
+├── 11/
+│   └── ...
+```
+
+### Examples
+
+**Hiking app with JPG satellite imagery:**
+```jsx
+<UrlTile
+  urlTemplate="file:///sdcard/HikingMaps.jpg"
+  minimumZ={8}
+  maximumZ={16}
+/>
+```
+
+**Aviation charts with TMS coordinate system:**
+```jsx
+<UrlTile
+  urlTemplate="file:///storage/Aviation/charts"
+  flipY={true}
+  minimumZ={6}
+  maximumZ={14}
+/>
+```
+
+**High-resolution tiles:**
+```jsx
+<UrlTile
+  urlTemplate="file:///tiles"
+  tileSize={512}
+  doubleTileSize={true}
+/>
+```
+
+### Supported Paths
+
+| Path Type | Example |
+|-----------|---------|
+| Absolute | `file:///storage/emulated/0/tiles` |
+| SD Card | `file:///sdcard/maps` |
+| App Data | `file:///data/data/com.yourapp/tiles` |
+
+### Notes
+
+- Network is automatically disabled when using `file://` URLs
+- The `{z}/{x}/{y}` pattern is added automatically - you only provide the base directory
+- Default extension is `.png` - append `.jpg` or `.webp` to the path for other formats
+- Ensure your app has storage permissions to read from the specified directory
